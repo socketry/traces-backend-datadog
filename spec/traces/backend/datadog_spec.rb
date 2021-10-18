@@ -37,7 +37,7 @@ Traces::Provider(MyClass) do
 	end
 	
 	def my_context
-		trace('my_context') {|span| return trace_context(span)}
+		trace('my_context') {|span| return self.trace_context}
 	end
 end
 
@@ -61,6 +61,16 @@ RSpec.describe Traces::Backend::Datadog do
 			subject(:name) {span.name}
 			
 			it {is_expected.to be == "my_span"}
+		end
+		
+		describe '#trace_context' do
+			subject(:context) {instance.trace_context(span)}
+			
+			describe '#trace_id' do
+				subject(:trace_id) {context.trace_id}
+				
+				it {is_expected.to_not be_nil}
+			end
 		end
 	end
 	

@@ -51,7 +51,7 @@ module Traces
 					end
 				end
 				
-				def trace_context(span = Datadog.tracer.active_span)
+				def trace_context(span = ::Datadog.tracer.active_span)
 					return nil unless span
 					
 					flags = 0
