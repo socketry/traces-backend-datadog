@@ -1,0 +1,41 @@
+name: Development
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    name: ${{matrix.ruby}} on ${{matrix.os}}
+    runs-on: ${{matrix.os}}-latest
+    continue-on-error: ${{matrix.experimental}}
+    
+    strategy:
+      matrix:
+        os:
+          - ubuntu
+          - macos
+        
+        ruby:
+          - "2.6"
+          - "2.7"
+          - "3.0"
+        
+        experimental: [false]
+        env:
+          - "TRACES_BACKEND=traces/backend/datadog"
+        
+        include:
+          - os: ubuntu
+            ruby: head
+            env: "TRACES_BACKEND=traces/backend/datadog"
+            experimental: true
+    
+    steps:
+    - uses: actions/checkout@v2
+    - uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: ${{matrix.ruby}}
+        bundler-cache: true
+    
+    - name: Run tests
+      timeout-minutes: 5
+      run: ${{matrix.env}} bundle exec rspec
