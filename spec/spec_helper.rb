@@ -20,6 +20,15 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
+require 'ddtrace'
+
+Datadog.configure do |c|
+	c.tracer.enabled = false
+	
+	# To enable debug mode
+	c.diagnostics.debug = true
+end
+
 require "bundler/setup"
 require "traces/backend/datadog"
 

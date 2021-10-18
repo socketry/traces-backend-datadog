@@ -66,7 +66,6 @@ module Traces
 						flags,
 						nil,
 						remote: false,
-						span: span,
 					)
 				end
 			end

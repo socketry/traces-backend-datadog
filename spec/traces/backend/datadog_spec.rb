@@ -31,18 +31,52 @@ Traces::Provider(MyClass) do
 	def my_method(argument)
 		trace('my_method', attributes: {argument: argument}) {super}
 	end
+	
+	def my_span
+		trace('my_span') {|span| return span}
+	end
+	
+	def my_context
+		trace('my_context') {|span| return trace_context(span)}
+	end
 end
 
 RSpec.describe Traces::Backend::Datadog do
+	subject(:instance) {MyClass.new}
+	
 	it "has a version number" do
 		expect(Traces::Backend::Datadog::VERSION).not_to be nil
 	end
 	
 	it "can invoke trace wrapper" do
-		instance = MyClass.new
-		
 		expect(instance).to receive(:trace).and_call_original
 		
 		instance.my_method(10)
+	end
+	
+	describe Datadog::Span do
+		subject(:span) {instance.my_span}
+		
+		describe '#name' do
+			subject(:name) {span.name}
+			
+			it {is_expected.to be == "my_span"}
+		end
+	end
+	
+	describe Traces::Context do
+		subject(:context) {instance.my_context}
+		
+		describe '#trace_id' do
+			subject(:trace_id) {context.trace_id}
+			
+			it {is_expected.to_not be_nil}
+		end
+		
+		describe '#parent_id' do
+			subject(:parent_id) {context.parent_id}
+			
+			it {is_expected.to_not be_nil}
+		end
 	end
 end
