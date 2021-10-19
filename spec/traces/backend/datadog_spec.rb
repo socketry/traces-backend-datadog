@@ -72,6 +72,18 @@ RSpec.describe Traces::Backend::Datadog do
 				it {is_expected.to_not be_nil}
 			end
 		end
+		
+		describe '#trace_context=' do
+			subject(:context) {instance.trace_context(span)}
+			
+			it "can update trace context" do
+				instance.trace_context = context
+				expect(::Datadog.tracer.provider.context).to have_attributes(
+					trace_id: context.trace_id,
+					span_id: context.parent_id
+				)
+			end
+		end
 	end
 	
 	describe Traces::Context do
