@@ -5,7 +5,7 @@ Gem::Specification.new do |spec|
 	spec.name = "traces-backend-datadog"
 	spec.version = Traces::Backend::Datadog::VERSION
 	
-	spec.summary = "A traces backend for Open Telemetry."
+	spec.summary = "A traces backend for Datadog."
 	spec.authors = ["Samuel Williams"]
 	spec.license = "MIT"
 	

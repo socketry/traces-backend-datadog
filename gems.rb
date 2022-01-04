@@ -6,7 +6,6 @@ gemspec
 
 group :test do
 	gem "console"
-	gem "opentelemetry-sdk"
 end
 
 group :maintenance, optional: true do
