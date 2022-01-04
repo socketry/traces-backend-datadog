@@ -37,8 +37,8 @@ module Traces
 			::Datadog::Span.prepend(SpanInterface)
 			
 			module Interface
-				def trace(name, attributes: {}, &block)
-					::Datadog.tracer.trace(name, tags: attributes, &block)
+				def trace(name, attributes: {}, resource: nil, &block)
+					::Datadog.tracer.trace(name, tags: attributes, resource: resource, &block)
 				end
 				
 				def trace_context=(context)
