@@ -44,8 +44,9 @@ module Traces
 				def trace_context=(context)
 					if context
 						::Datadog.tracer.provider.context = ::Datadog::Context.new(
-							trace_id: context.trace_id,
-							span_id: context.parent_id,
+							# We force these to be integers otherwise Datadog can fail internally:
+							trace_id: context.trace_id.to_i,
+							span_id: context.parent_id.to_i,
 							sampled: context.sampled?,
 						)
 					end

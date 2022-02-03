@@ -83,6 +83,17 @@ RSpec.describe Traces::Backend::Datadog do
 					span_id: context.parent_id
 				)
 			end
+			
+			it "can round-trip trace context" do
+				parsed_context = Traces::Context.parse(context.to_s)
+				
+				instance.trace_context = parsed_context
+				
+				expect(::Datadog.tracer.provider.context).to have_attributes(
+					trace_id: context.trace_id,
+					span_id: context.parent_id
+				)
+			end
 		end
 	end
 	
