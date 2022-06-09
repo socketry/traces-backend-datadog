@@ -39,6 +39,10 @@ Traces::Provider(MyClass) do
 	def my_context
 		trace('my_context') {|span| return self.trace_context}
 	end
+
+	def my_span_and_context
+		trace('my_span_and_context') {|span| return span, self.trace_context}
+	end
 end
 
 RSpec.describe Traces::Backend::Datadog do
@@ -54,7 +58,7 @@ RSpec.describe Traces::Backend::Datadog do
 		instance.my_method(10)
 	end
 	
-	describe Datadog::Span do
+	describe Datadog::Tracing::Span do
 		subject(:span) {instance.my_span}
 		
 		describe '#name' do
@@ -62,10 +66,14 @@ RSpec.describe Traces::Backend::Datadog do
 			
 			it {is_expected.to be == "my_span"}
 		end
-		
+	end
+	
+	describe Datadog::Tracing::TraceOperation do
+		let(:span_and_context) {instance.my_span_and_context}
+		subject(:span) {span_and_context.first}
+		subject(:context) {span_and_context.last}
+
 		describe '#trace_context' do
-			subject(:context) {instance.trace_context(span)}
-			
 			describe '#trace_id' do
 				subject(:trace_id) {context.trace_id}
 				
@@ -74,13 +82,14 @@ RSpec.describe Traces::Backend::Datadog do
 		end
 		
 		describe '#trace_context=' do
-			subject(:context) {instance.trace_context(span)}
-			
 			it "can update trace context" do
 				instance.trace_context = context
-				expect(::Datadog.tracer.provider.context).to have_attributes(
+
+				span = instance.my_span
+
+				expect(span).to have_attributes(
 					trace_id: context.trace_id,
-					span_id: context.parent_id
+					parent_id: context.parent_id
 				)
 			end
 			
@@ -89,9 +98,11 @@ RSpec.describe Traces::Backend::Datadog do
 				
 				instance.trace_context = parsed_context
 				
-				expect(::Datadog.tracer.provider.context).to have_attributes(
+				span = instance.my_span
+
+				expect(span).to have_attributes(
 					trace_id: context.trace_id,
-					span_id: context.parent_id
+					parent_id: context.parent_id
 				)
 			end
 		end

@@ -28,42 +28,36 @@ require_relative 'version'
 module Traces
 	module Backend
 		module Datadog
-			module SpanInterface
-				def []= key, value
-					set_tag(key, value)
-				end
-			end
-			
-			::Datadog::Span.prepend(SpanInterface)
-			
 			module Interface
 				def trace(name, attributes: {}, resource: nil, &block)
-					::Datadog.tracer.trace(name, tags: attributes, resource: resource, &block)
+					::Datadog::Tracing.trace(name, tags: attributes, resource: resource, &block)
 				end
 				
 				def trace_context=(context)
 					if context
-						::Datadog.tracer.provider.context = ::Datadog::Context.new(
+						trace_digest = ::Datadog::Tracing::TraceDigest.new(
 							# We force these to be integers otherwise Datadog can fail internally:
 							trace_id: context.trace_id.to_i,
 							span_id: context.parent_id.to_i,
-							sampled: context.sampled?,
+							trace_sampling_priority: context.sampled? ? 1 : 0,
 						)
+
+						::Datadog::Tracing.continue_trace!(trace_digest)
 					end
 				end
 				
-				def trace_context(span = ::Datadog.tracer.active_span)
-					return nil unless span
+				def trace_context
+					return nil unless trace = ::Datadog::Tracing.active_trace
 					
 					flags = 0
 					
-					if span.sampled
+					if trace.sampled?
 						flags |= Context::SAMPLED
 					end
 					
 					return Context.new(
-						span.trace_id,
-						span.span_id,
+						trace.id,
+						trace.active_span.span_id,
 						flags,
 						nil,
 						remote: false,
