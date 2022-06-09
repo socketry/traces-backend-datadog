@@ -2,7 +2,7 @@
 
 A backend for sending traces to Datadog.
 
-[![Development Status](https://github.com/socketry/traces/workflows/Development/badge.svg)](https://github.com/socketry/traces/actions?workflow=Development)
+[![Development Status](https://github.com/socketry/traces-backend-datadog/workflows/Development/badge.svg)](https://github.com/socketry/traces-backend-datadog/actions?workflow=Development)
 
 ## Installation
 

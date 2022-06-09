@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 
 require_relative "lib/traces/backend/datadog/version"
 
@@ -16,8 +17,8 @@ Gem::Specification.new do |spec|
 	
 	spec.files = Dir.glob('{lib}/**/*', File::FNM_DOTMATCH, base: __dir__)
 	
-	spec.add_dependency "traces", "~> 0.6.0"
 	spec.add_dependency "ddtrace", "~> 1.0"
+	spec.add_dependency "traces", "~> 0.6.0"
 	
 	spec.add_development_dependency "rspec", "~> 3.0"
 end
