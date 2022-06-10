@@ -66,6 +66,14 @@ RSpec.describe Traces::Backend::Datadog do
 			
 			it {is_expected.to be == "my_span"}
 		end
+		
+		describe '#[]=' do
+			before {span["my_key"] = "tag_value"}
+
+			subject(:value) {span["my_key"]}
+
+			it {is_expected.to be == "tag_value"}
+		end
 	end
 	
 	describe Datadog::Tracing::TraceOperation do
