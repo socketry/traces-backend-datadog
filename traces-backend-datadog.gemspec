@@ -15,10 +15,11 @@ Gem::Specification.new do |spec|
 	
 	spec.homepage = "https://github.com/socketry/traces-backend-datadog"
 	
-	spec.files = Dir.glob('{lib}/**/*', File::FNM_DOTMATCH, base: __dir__)
+	spec.files = Dir.glob(['{lib}/**/*', '*.md'], File::FNM_DOTMATCH, base: __dir__)
 	
 	spec.add_dependency "ddtrace", "~> 1.0"
-	spec.add_dependency "traces", "~> 0.6.0"
+	spec.add_dependency "traces", "~> 0.6"
 	
-	spec.add_development_dependency "rspec", "~> 3.0"
+	spec.add_development_dependency "sus"
+	spec.add_development_dependency "bake-test"
 end
