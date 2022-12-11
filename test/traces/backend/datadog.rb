@@ -95,6 +95,25 @@ describe Traces::Backend::Datadog do
 					parent_id: be == context.parent_id
 				)
 			end
+			
+			it "can update trace context within active span" do
+				parsed_context = Traces::Context.parse(context.to_s)
+				
+				Traces.trace("test.outer") do |span|
+					Traces.trace_context = parsed_context
+					
+					# It's updated on the next call to trace:
+					expect(span).not.to have_attributes(
+						trace_id: be == context.trace_id,
+					)
+					
+					Traces.trace("test.inner") do |span|
+						expect(span).to have_attributes(
+							trace_id: be == context.trace_id,
+						)
+					end
+				end
+			end
 		end
 	end
 	
