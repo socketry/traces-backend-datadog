@@ -13,19 +13,19 @@ end
 
 Traces::Provider(MyClass) do
 	def my_method(argument)
-		trace('my_method', attributes: {argument: argument}) {super}
+		Traces.trace('my_method', attributes: {argument: argument}) {super}
 	end
 	
 	def my_span
-		trace('my_span') {|span| return span}
+		Traces.trace('my_span') {|span| return span}
 	end
 	
 	def my_context
-		trace('my_context') {|span| return self.trace_context}
+		Traces.trace('my_context') {|span| return Traces.trace_context}
 	end
 
 	def my_span_and_context
-		trace('my_span_and_context') {|span| return span, self.trace_context}
+		Traces.trace('my_span_and_context') {|span| return span, Traces.trace_context}
 	end
 end
 
@@ -37,7 +37,7 @@ describe Traces::Backend::Datadog do
 	end
 	
 	it "can invoke trace wrapper" do
-		expect(instance).to receive(:trace)
+		expect(Traces).to receive(:trace)
 		
 		instance.my_method(10)
 	end
@@ -73,7 +73,7 @@ describe Traces::Backend::Datadog do
 		
 		describe '#trace_context=' do
 			it "can update trace context" do
-				instance.trace_context = context
+				Traces.trace_context = context
 				
 				span = instance.my_span
 				
@@ -86,7 +86,7 @@ describe Traces::Backend::Datadog do
 			it "can round-trip trace context" do
 				parsed_context = Traces::Context.parse(context.to_s)
 				
-				instance.trace_context = parsed_context
+				Traces.trace_context = parsed_context
 				
 				span = instance.my_span
 				
