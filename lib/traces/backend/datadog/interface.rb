@@ -8,12 +8,6 @@ require 'ddtrace'
 require 'traces/context'
 require_relative 'version'
 
-# We introduce some compatibility interfaces for getting and setting tags:
-module Datadog::Tracing::Metadata::Tagging
-	alias []= set_tag
-	alias [] get_tag
-end
-
 module Traces
 	module Backend
 		module Datadog

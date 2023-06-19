@@ -7,13 +7,18 @@ source 'https://rubygems.org'
 
 gemspec
 
-group :test do
-	gem "console"
-end
-
 group :maintenance, optional: true do
 	gem "bake-modernize"
 	gem "bake-gem"
 	
 	gem "utopia-project"
+end
+
+group :test do
+	gem "bake-test"
+	gem "bake-test-external"
+	
+	gem "sus"
+	gem "covered"
+	gem "console"
 end
