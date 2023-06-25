@@ -12,8 +12,8 @@ module Traces
 	module Backend
 		module Datadog
 			module Interface
-				def trace(name, attributes: {}, resource: nil, &block)
-					::Datadog::Tracing.trace(name, tags: attributes, resource: resource, &block)
+				def trace(name, resource: nil, attributes: {}, &block)
+					::Datadog::Tracing.trace(name, resource: resource, tags: attributes, &block)
 				end
 				
 				def trace_context=(context)
@@ -24,7 +24,7 @@ module Traces
 							span_id: context.parent_id.to_i,
 							trace_sampling_priority: context.sampled? ? 1 : 0,
 						)
-
+						
 						::Datadog::Tracing.continue_trace!(trace_digest)
 					end
 				end
