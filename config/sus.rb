@@ -5,7 +5,7 @@
 
 ENV['TRACES_BACKEND'] ||= 'traces/backend/datadog'
 
-require 'ddtrace'
+require 'datadog'
 
 Datadog.configure do |config|
 	# To enable debug mode

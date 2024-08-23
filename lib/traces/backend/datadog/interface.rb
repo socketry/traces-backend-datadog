@@ -3,7 +3,7 @@
 # Released under the MIT License.
 # Copyright, 2021-2023, by Samuel Williams.
 
-require 'ddtrace'
+require 'datadog'
 
 require 'traces/context'
 require_relative 'version'
