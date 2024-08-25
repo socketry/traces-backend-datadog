@@ -17,6 +17,6 @@ Gem::Specification.new do |spec|
 	
 	spec.files = Dir.glob(['{lib}/**/*', '*.md'], File::FNM_DOTMATCH, base: __dir__)
 	
-	spec.add_dependency "ddtrace", "~> 1.2"
+	spec.add_dependency "datadog", "~> 2.3"
 	spec.add_dependency "traces", "~> 0.10"
 end
