@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Released under the MIT License.
-# Copyright, 2021-2023, by Samuel Williams.
+# Copyright, 2021-2024, by Samuel Williams.
 
 require 'datadog'
 
@@ -40,7 +40,7 @@ module Traces
 					
 					return Context.new(
 						trace.id,
-						trace.active_span.span_id,
+						trace.active_span.id,
 						flags,
 						nil,
 						remote: false,
