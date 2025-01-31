@@ -46,6 +46,10 @@ module Traces
 						remote: false,
 					)
 				end
+				
+				def active?
+					!!::Datadog::Tracing.active_trace
+				end
 			end
 		end
 		

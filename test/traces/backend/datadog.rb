@@ -42,6 +42,18 @@ describe Traces::Backend::Datadog do
 		instance.my_method(10)
 	end
 	
+	with "#active?" do
+		it "is not active by default" do
+			expect(Traces).not.to be(:active?)
+		end
+		
+		it "is active within a trace block" do
+			Traces.trace('test') do
+				expect(Traces).to be(:active?)
+			end
+		end
+	end
+	
 	describe Datadog::Tracing::Span do
 		let(:span) {instance.my_span}
 		
